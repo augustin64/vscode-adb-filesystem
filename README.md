@@ -38,6 +38,14 @@ You can browse the files inside the connected Android devices using VSCode!
 
 * No settings available
 
+## Building
+You need to install npm first, then type
+```bash
+npm install vsce
+node_modules/vsce/vsce package
+```
+This will create a `.vsix` file that you can install in VSCode/ Codium...
+
 ## Known Issues
 
 * Currently, only files or folders under the `/sdcard` folder are available.
