@@ -17,6 +17,24 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('adbfs.workspaceInit', _ => {
         vscode.workspace.updateWorkspaceFolders(0, 0, { uri: vscode.Uri.parse('adbfs:/'), name: "Android Device Files" });
     }));
+
+
+    const SETTING_KEY = 'adb-filesystem.basePath';
+
+    // Listen for configuration changes
+    vscode.workspace.onDidChangeConfiguration(event => {
+        if (event.affectsConfiguration(SETTING_KEY)) {
+            const reloadAction = 'Reload';
+            vscode.window.showInformationMessage(
+                `Your extension settings have changed. Please reload for the changes to take effect.`, 
+                reloadAction
+            ).then(action => {
+                if (action === reloadAction) {
+                    vscode.commands.executeCommand('workbench.action.reloadWindow');
+                }
+            });
+        }
+    });
 }
 
 // this method is called when your extension is deactivated

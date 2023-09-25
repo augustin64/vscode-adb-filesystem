@@ -5,6 +5,15 @@ const adbClient = adb.createClient();
 const concatStream = require('concat-stream');
 const streamifier = require('streamifier');
 
+
+// This is ugly to put this here but it works in a simple way
+const config = vscode.workspace.getConfiguration('adb-filesystem');
+
+// Get the value of the base path
+const setting = config.get('basePath');
+const basePath = (typeof setting === "string") ? setting : "/sdcard";
+
+
 export class AdbEntry implements vscode.FileStat {
 
     type: vscode.FileType;
@@ -272,9 +281,9 @@ export class AdbFS implements vscode.FileSystemProvider {
         parts.shift();
         let path = parts.join("/");
         if (path == "") {
-            path = "/sdcard";
+            path = basePath;
         } else {
-            path = "/sdcard/" + path;
+            path = basePath + "/" + path;
         }
         return { "deviceId": deviceId, "path": path };
     }

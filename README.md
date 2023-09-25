@@ -36,7 +36,8 @@ You can browse the files inside the connected Android devices using VSCode!
 
 ## Extension Settings
 
-* No settings available
+* You can change the folder you want to navigate to via VSCode settings: `adb-filesystem.basePath`
+  Note that you need to reload VSCode if you want changes to be applied
 
 ## Building
 You need to install npm first, then type
@@ -45,10 +46,6 @@ npm install vsce
 node_modules/vsce/vsce package
 ```
 This will create a `.vsix` file that you can install in VSCode/ Codium...
-
-## Known Issues
-
-* Currently, only files or folders under the `/sdcard` folder are available.
 
 ## Release Notes
 
