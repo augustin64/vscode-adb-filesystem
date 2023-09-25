@@ -55,18 +55,25 @@ export class AdbFS implements vscode.FileSystemProvider {
                 resolve(entry);
             }
             catch(err) {
-                if (err.code == "ENOENT") {
-                    console.log("ENOENT received.");
-                    reject(vscode.FileSystemError.FileNotFound(uri));
-                    return;
+                if (typeof err === "string") {
+                    console.error('Something went wrong:', err)
+                } else if (err instanceof Error) {
+                    if (err.name == "ENOENT") {
+                        console.log("ENOENT received.");
+                        reject(vscode.FileSystemError.FileNotFound(uri));
+                        return;
+                    }
+                    reject(err);
                 }
-                reject(err);
             }
         });
         return thenable;
     }
 
-    async readDevices(resolve: (value?: [string, vscode.FileType][] | PromiseLike<[string, vscode.FileType][]> | undefined) => void, reject : any) {
+    async readDevices(
+        resolve: (value: [string, vscode.FileType][] | PromiseLike<[string, vscode.FileType][]>) => void,
+        reject: (reason?: any) => void
+    ) {
         console.log("adbfs readDevices called.");
         try {
             let devices = await adbClient.listDevices()
@@ -79,8 +86,12 @@ export class AdbFS implements vscode.FileSystemProvider {
             resolve(entries);
         }
         catch (err) {
-            console.error('Something went wrong:', err.stack)
-            reject(""+err);
+            if (typeof err === "string") {
+                console.error('Something went wrong:', err)
+            } else if (err instanceof Error) {
+                console.error('Something went wrong:', err.stack)
+                reject(""+err);
+            }
         }
     }
 
